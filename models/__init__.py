@@ -1,9 +1,23 @@
 #!/usr/bin/python3
 """
-__init__  method for the models directory
+do something
 """
-from models.engine.file_storage import FileStorage
+from models.engine import file_storage
+from models.base_model import BaseModel
+from models.user import User
+from models.city import City
+from models.state import State
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
 
+allclasses = {"BaseModel": BaseModel,
+              "User": User,
+              "State": State,
+              "City": City,
+              "Place": Place,
+              "Amenity": Amenity,
+              "Review": Review}
 
-storage = FileStorage()
+storage = file_storage.FileStorage()
 storage.reload()

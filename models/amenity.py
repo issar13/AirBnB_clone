@@ -1,8 +1,12 @@
 #!/usr/bin/python3
-"""Contains the Amenity model"""
+"""Class Amenity"""
 from models.base_model import BaseModel
 
 
 class Amenity(BaseModel):
-    """Implements the Amenity model"""
-    name = ""
+    """Represents a City"""
+    name = ''
+
+    def __ini__(self, *args, **kwargs):
+        """"""
+        super().__ini__(*args, **kwargs)
