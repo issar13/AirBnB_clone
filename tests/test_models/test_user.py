@@ -1,51 +1,44 @@
 #!/usr/bin/python3
-"""Module for test User class"""
+"""
+Unittest for user.py
+"""
 import unittest
-import json
-import pep8
+from models.user import User
 import datetime
 
-from models.user import User
-from models.base_model import BaseModel
 
+class UserCase(unittest.TestCase):
+    """Tests instances and methods from user class"""
 
-class TestUser(unittest.TestCase):
-    """Test User class implementation"""
-    def test_doc_module(self):
-        """Module documentation"""
-        doc = User.__doc__
-        self.assertGreater(len(doc), 1)
+    u = User()
 
-    def test_pep8_conformance_base_model(self):
-        """Test that models/user.py conforms to PEP8."""
-        pep8style = pep8.StyleGuide(quiet=True)
-        result = pep8style.check_files(['models/user.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+    def test_class_exists(self):
+        """tests if class exists"""
+        self.assertEqual(str(type(self.u)), "<class 'models.user.User'>")
 
-    def test_pep8_conformance_test_base_model(self):
-        """Test that tests/test_models/test_user.py conforms to PEP8."""
-        pep8style = pep8.StyleGuide(quiet=True)
-        res = pep8style.check_files(['tests/test_models/test_user.py'])
-        self.assertEqual(res.total_errors, 0,
-                         "Found code style errors (and warnings).")
+    def test_user_inheritance(self):
+        """test if User is a subclass of BaseModel"""
+        self.assertIsInstance(self.u, User)
 
-    def test_doc_constructor(self):
-        """Constructor documentation"""
-        doc = User.__init__.__doc__
-        self.assertGreater(len(doc), 1)
+    def testHasAttributes(self):
+        """verify if attributes exist"""
+        self.assertTrue(hasattr(self.u, 'email'))
+        self.assertTrue(hasattr(self.u, 'password'))
+        self.assertTrue(hasattr(self.u, 'first_name'))
+        self.assertTrue(hasattr(self.u, 'last_name'))
+        self.assertTrue(hasattr(self.u, 'id'))
+        self.assertTrue(hasattr(self.u, 'created_at'))
+        self.assertTrue(hasattr(self.u, 'updated_at'))
 
-    def test_class(self):
-        """Validate the types of the attributes an class"""
-        with self.subTest(msg='Inheritance'):
-            self.assertTrue(issubclass(User, BaseModel))
-
-        with self.subTest(msg='Attributes'):
-            self.assertIsInstance(User.email, str)
-            self.assertIsInstance(User.password, str)
-            self.assertIsInstance(User.first_name, str)
-            self.assertIsInstance(User.last_name, str)
-
+    def test_types(self):
+        """tests if the type of the attribute is the correct one"""
+        self.assertIsInstance(self.u.first_name, str)
+        self.assertIsInstance(self.u.last_name, str)
+        self.assertIsInstance(self.u.email, str)
+        self.assertIsInstance(self.u.password, str)
+        self.assertIsInstance(self.u.id, str)
+        self.assertIsInstance(self.u.created_at, datetime.datetime)
+        self.assertIsInstance(self.u.updated_at, datetime.datetime)
 
 if __name__ == '__main__':
     unittest.main()
