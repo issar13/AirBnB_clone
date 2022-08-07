@@ -1,9 +1,11 @@
 #!/usr/bin/python3
-"""City class that inherits from BaseModel"""
+"""
+Defines city
+"""
 from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    """Our beautiful City class"""
+    """defines city to look for"""
     state_id = ""
     name = ""
