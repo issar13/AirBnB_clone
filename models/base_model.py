@@ -1,58 +1,48 @@
-#!/usr/bin/pyhon3
-"""
-Parent class that will inherit
+#!/usr/bin/python3
+"""Our BaseModel that defines all common attributes/methods for other classes
 """
 import uuid
 from datetime import datetime
-from models import storage
+import models
 
 
-class BaseModel:
-    """Defines all common attributes/methods
-    """
+class BaseModel():
+    """The main class"""
     def __init__(self, *args, **kwargs):
-        """initializes all attributes
-        """
-        if not kwargs:
+        """Constructor of the instance. Uses kwargs if not empty"""
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "__class__":
+                    continue
+                elif key == "created_at" or key == "updated_at":
+                    time = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                    setattr(self, key, time)
+                else:
+                    setattr(self, key, value)
+        else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
-            self.updated_at = self.created_at
-            storage.new(self)
-        else:
-            f = "%Y-%m-%dT%H:%M:%S.%f"
-            for key, value in kwargs.items():
-                if key == 'created_at' or key == 'updated_at':
-                    value = datetime.strptime(kwargs[key], f)
-                if key != '__class__':
-                    setattr(self, key, value)
+            self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
-        """returns class name, id and attribute dictionary
+        """Return an user friendly representation
+           of the isinstance
         """
-        class_name = "[" + self.__class__.__name__ + "]"
-        dct = {k: v for (k, v) in self.__dict__.items() if (not v) is False}
-        return class_name + " (" + self.id + ") " + str(dct)
+        return ("[{}] ({}) {}".format(self.__class__.__name__,
+                                      self.id, self.__dict__))
 
     def save(self):
-        """updates last update time
-        """
+        """Updates the public instance attribute
+        updated_at with the current date and time"""
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
-        """creates a new dictionary, adding a key and returning
-        datemtimes converted to strings
-        """
-        new_dict = {}
-
-        for key, values in self.__dict__.items():
-            if key == "created_at" or key == "updated_at":
-                new_dict[key] = values.strftime("%Y-%m-%dT%H:%M:%S.%f")
-            else:
-                if not values:
-                    pass
-                else:
-                    new_dict[key] = values
-        new_dict['__class__'] = self.__class__.__name__
-
-        return new_dict
+        """Returns a dictionary containing
+        all the __dict__ keys / values of the instance"""
+        my_dict = self.__dict__.copy()
+        my_dict.update({"__class__": self.__class__.__name__})
+        my_dict.update({"created_at": self.created_at.isoformat()})
+        my_dict.update({"updated_at": self.updated_at.isoformat()})
+        return (my_dict)
